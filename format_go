@@ -1,0 +1,18 @@
+#!/bin/bash
+
+SHELL_DIR=$(cd "$(dirname `readlink "$0"`)";pwd)
+TARGET_PATH=$1
+
+if [[ "X$TARGET_PATH" == "X" ]]; then
+  echo "usage: format_go [GO_PROJECT_PATH|GO_SRC_FILE_PATH]"
+  exit -1
+fi
+
+$SHELL_DIR/libs/drop_import_space_line $TARGET_PATH
+goimports -w $TARGET_PATH
+gofmt -w $TARGET_PATH
+if [ -d $TARGET_PATH ]; then
+  cmd="cd $TARGET_PATH && go mod tidy && cd -"
+  echo running $cmd
+  $cmd
+fi

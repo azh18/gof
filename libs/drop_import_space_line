@@ -1,0 +1,50 @@
+#!/usr/bin/python
+import os
+import sys
+
+
+def drop_space_line_inside_import(src_file_path):
+    new_file_content = []
+    in_import = False
+    with open(src_file_path) as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            if not in_import:
+                new_file_content.append(line)
+                if line.replace(" ", "").replace("\n", "") == "import(":
+                    in_import = True
+                continue
+            # in import block
+            if line.strip().strip("\n") == "":
+                continue
+            new_file_content.append(line)
+            if line.strip("\n").strip() == ")":
+                in_import = False
+    return "".join(new_file_content)
+
+
+if __name__ == "__main__":
+    src_path = sys.argv[1]
+    src_file_list = []
+    if os.path.isdir(src_path):
+        # extract files in src_path
+        for root, _, filenames in os.walk(src_path):
+            for filename in filenames:
+                if filename[-3:] == ".go":
+                    src_file_list.append(os.path.join(root, filename))
+    else:
+        if src_path[-3:] != ".go":
+            raise Exception("input path is neither dir nor go source file: %s" % src_path)
+        else:
+            src_file_list.append(src_path)
+
+    # delete space line inside import block
+    for file_path in src_file_list:
+        print("processing: %s" % file_path)
+        content = drop_space_line_inside_import(file_path)
+        with open(file_path, "w") as f:
+            f.write(content)
+
+
