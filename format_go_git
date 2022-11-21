@@ -1,4 +1,5 @@
 #!/bin/bash
-git status|grep modified|grep "\.go"|awk '{print $2}'|xargs -L 1 ${GOF_BIN}
-git status|grep "new file"|grep "\.go"|awk -F '   ' '{print $2}'|xargs -L 1 ${GOF_BIN}
-git status|grep "\.go"|grep -v 'modified'|grep -v 'new file'|xargs -L 1 ${GOF_BIN}
+git status|grep -v "gen"|grep 'modified:'|grep "\.go"|awk '{print $2}'|xargs -L 1 ${GOF_BIN}
+git status|grep -v "gen"|grep 'new file:'|grep "\.go"|awk -F '   ' '{print $2}'|xargs -L 1 ${GOF_BIN}
+git status|grep -v "gen"|grep 'renamed:'|grep "\.go"|awk '{print $4}'|xargs -L 1 ${GOF_BIN}
+git status|grep -v "gen"|grep "\.go"|grep -v 'modified:'|grep -v 'new file:'|grep -v "renamed:"|grep -v "deleted:"|xargs -L 1 ${GOF_BIN}
