@@ -2,6 +2,7 @@
 
 SHELL_DIR=$(cd "$(dirname `readlink "$0"`)";pwd)
 TARGET_PATH=$1
+INNER_REPO=code.byted.org
 
 if [[ "X$TARGET_PATH" == "X" ]]; then
   echo "usage: format_go [GO_PROJECT_PATH|GO_SRC_FILE_PATH]"
